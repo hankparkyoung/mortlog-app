@@ -2,7 +2,8 @@
   import UnitCard from '$lib/UnitCard.svelte';
 
   let { data } = $props();
-  let { units } = data;
+  let { units, breakpoints } = data;
+  console.log(breakpoints);
   let unitsByCost = {
     1: [],
     2: [],
@@ -14,17 +15,54 @@
     unitsByCost[unit.cost].push(unit);
   });
 
-  let selectedUnitIds = $state([]);
-  const toggleUnitSelection = unitId => {
-    const index = selectedUnitIds.indexOf(unitId);
+  let selectedUnits = $state([]);
+  const toggleUnitSelection = unit => {
+    const index = selectedUnits.findIndex(selected => (
+      selected.unit_id === unit.unit_id
+    ));
     if (index === -1) {
-      selectedUnitIds.push(unitId);
+      selectedUnits.push(unit);
     } else {
-      selectedUnitIds.splice(index, 1);
+      selectedUnits.splice(index, 1);
     }
   };
 
-  $inspect(selectedUnitIds);
+  $inspect(selectedUnits);
+
+  let allSelectedTraits = $derived.by(() => {
+    let result = {};
+    selectedUnits.forEach(unit => {
+      unit.traits.forEach(trait => {
+        result[trait.trait_id] = result[trait.trait_id]
+          ? result[trait.trait_id] + 1
+          : 1;
+      });
+    });
+    return result;
+  });
+
+  $inspect(allSelectedTraits);
+
+  let activeTraits = $derived.by(() => {
+    let result = {};
+    Object.keys(allSelectedTraits).forEach(trait_id => {
+      let traitBreakpoints = breakpoints.filter(breakpoint => (
+        parseInt(trait_id) === breakpoint.trait_id
+      ));
+      let activeBreakpoint;
+      traitBreakpoints.forEach(breakpoint => {
+        if (allSelectedTraits[trait_id] >= breakpoint.breakpoint_value) {
+          activeBreakpoint = breakpoint;
+        }
+      });
+      if (activeBreakpoint) {
+        result[trait_id] = activeBreakpoint;
+      }
+    });
+    return result;
+  })
+
+  $inspect(activeTraits);
 
 </script>
 
@@ -39,7 +77,7 @@
           <UnitCard
             unit={unit}
             toggleUnitSelection={toggleUnitSelection}
-            selectedUnitIds={selectedUnitIds}
+            selectedUnits={selectedUnits}
           />
         {/each}
       </div>
@@ -48,7 +86,7 @@
           <UnitCard
             unit={unit}
             toggleUnitSelection={toggleUnitSelection}
-            selectedUnitIds={selectedUnitIds}
+            selectedUnits={selectedUnits}
           />
         {/each}
       </div>
@@ -57,7 +95,7 @@
           <UnitCard
             unit={unit}
             toggleUnitSelection={toggleUnitSelection}
-            selectedUnitIds={selectedUnitIds}
+            selectedUnits={selectedUnits}
           />
         {/each}
       </div>
@@ -66,7 +104,7 @@
           <UnitCard
             unit={unit}
             toggleUnitSelection={toggleUnitSelection}
-            selectedUnitIds={selectedUnitIds}
+            selectedUnits={selectedUnits}
           />
         {/each}
       </div>
@@ -75,7 +113,7 @@
           <UnitCard
             unit={unit}
             toggleUnitSelection={toggleUnitSelection}
-            selectedUnitIds={selectedUnitIds}
+            selectedUnits={selectedUnits}
           />
         {/each}
       </div>
@@ -83,22 +121,35 @@
   </div>
   <div class="current-game-state">
     <h3 class="subtitle">Current Units</h3>
-    {#if selectedUnitIds.length === 0}
+    {#if selectedUnits.length === 0}
       <p class="description">Units you select will show up here.</p>
     {/if}
     <div class="units-by-cost">
       {#each units as unit}
-        {#if selectedUnitIds.includes(unit.unit_id)}
+        {#if selectedUnits.some(selected => selected.unit_id === unit.unit_id)}
           <UnitCard
             unit={unit}
             toggleUnitSelection={toggleUnitSelection}
-            selectedUnitIds={selectedUnitIds}
+            selectedUnits={selectedUnits}
             isMini={true}
           />
         {/if}
       {/each}
     </div>
     <h3 class="subtitle">Active Traits</h3>
+    <div class="traits">
+      {#each Object.keys(activeTraits) as activeTraitId}
+      <div class="trait-tag">
+        <p class="trait">
+          {activeTraits[activeTraitId].trait_name}
+        </p>
+        <p class="breakpoint">
+          {activeTraits[activeTraitId].breakpoint_value}
+        </p>
+      </div>
+    {/each}
+    </div>
+
   </div>
 </div>
 
@@ -116,6 +167,7 @@
     margin: 0 0 8px 4px;
     padding: 0;
   }
+
   .units-container {
     display: block;
     margin: none;
@@ -124,5 +176,23 @@
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 8px;
+  }
+  .traits {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .trait-tag {
+    background-color: #bbbbbb88;
+    border-radius: 8px;
+    display: flex;
+    height: 32px;
+    justify-content: space-between;
+    margin: 0 0 4px 4px;
+    padding: 0;
+    width: 140px;
+  }
+  .trait, .breakpoint {
+    margin: 0;
+    padding: 8px;
   }
 </style>

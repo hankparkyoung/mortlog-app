@@ -1,7 +1,11 @@
 export const load = async ({ fetch }) => {
-  const response = await fetch('/api/units/with-traits');
-  const units = await response.json();
+  const unitsWithTraitsRes = await fetch('/api/units/with-traits');
+  const units = await unitsWithTraitsRes.json();
+
+  const traitBreakpointsRes = await fetch('/api/trait-breakpoints/with-names');
+  const breakpoints = await traitBreakpointsRes.json();
   return {
     units,
+    breakpoints
   }
 }

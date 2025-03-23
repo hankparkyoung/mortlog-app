@@ -1,7 +1,9 @@
 <script>
-  let { unit, toggleUnitSelection, selectedUnitIds, isMini } = $props();
+  let { unit, toggleUnitSelection, selectedUnits, isMini } = $props();
   let {unit_id: id, unit_name: name, cost, traits } = unit;
-  let isSelected = $derived(selectedUnitIds.includes(id));
+  let isSelected = $derived(
+    selectedUnits.some(selected => selected.unit_id === id)
+  );
   let cost_style = `unit-cost-${cost}`;
 </script>
 
@@ -9,7 +11,7 @@
   class="unit-card"
   class:mini-card={isMini}
 >
-  <button onclick={() => toggleUnitSelection(id)}>
+  <button onclick={() => toggleUnitSelection(unit)}>
     <h3
       class="title {cost_style}"
       class:selected-cost-1={isSelected && unit.cost === 1}
@@ -44,11 +46,14 @@
   }
 
   .unit-card {
-    border: 2px solid black;
+    border: 2px solid grey;
     display: block;
     height: 106px;
     margin: 4px;
     width: 140px;
+  }
+  .unit-card:hover {
+    border-color: black;
   }
   .mini-card {
     height: 42px;
