@@ -1,103 +1,114 @@
 <script>
-  let { unit, toggleUnitSelection, selectedUnits, isMini } = $props();
-  let {unit_id: id, unit_name: name, cost, traits } = unit;
-  let isSelected = $derived(
+  const {
+    unit,
+    toggleUnitSelection,
+    selectedUnits,
+    isMini
+  } = $props();
+
+  const {
+    unit_id: id,
+    unit_name: name,
+    cost,
+    traits
+  } = unit;
+
+  const isSelected = $derived(
     selectedUnits.some(selected => selected.unit_id === id)
   );
-  let cost_style = `unit-cost-${cost}`;
+  const styleByCost = `cost-${cost}`;
+  const styleBySelected = $derived.by(() => {
+    const style = isSelected
+      ? `cost-${cost}--selected`
+      : ''
+    return style;
+  });
 </script>
 
-<div
+<button
   class="unit-card"
-  class:mini-card={isMini}
+  class:mini={isMini}
+  onclick={() => toggleUnitSelection(unit)}
 >
-  <button onclick={() => toggleUnitSelection(unit)}>
-    <h3
-      class="title {cost_style}"
-      class:selected-cost-1={isSelected && unit.cost === 1}
-      class:selected-cost-2={isSelected && unit.cost === 2}
-      class:selected-cost-3={isSelected && unit.cost === 3}
-      class:selected-cost-4={isSelected && unit.cost === 4}
-      class:selected-cost-5={isSelected && unit.cost === 5}
-    >{name}</h3>
-    {#if !isMini}
-      <ul>
-        {#each traits as trait}
-          <li>{trait.trait_name}</li>
-        {/each}
-      </ul>
-    {/if}
-  </button>
-</div>
+  <h3
+    class={`name ${styleByCost} ${styleBySelected}`}
+  >{name}</h3>
+  {#if !isMini}
+    <ul class="traits">
+      {#each traits as trait}
+        <li>{trait.trait_name}</li>
+      {/each}
+    </ul>
+  {/if}
+</button>
 
 <style>
   * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  button {
     all: unset;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-  }
-
-  .unit-card {
-    border: 2px solid grey;
-    display: block;
-    height: 106px;
-    margin: 4px;
-    width: 140px;
-  }
-  .unit-card:hover {
-    border-color: black;
-  }
-  .mini-card {
-    height: 42px;
+    box-sizing: border-box;
   }
   ul {
     display: block;
     list-style: none;
+  }
+
+  .unit-card {
+    border: 2px solid grey;
+    display: flex;
+    flex-direction: column;
+    height: 98px;
     margin: 4px;
+    width: 120px;
   }
-  li {
-    margin-right: 12px;
+  .mini {
+    height: 36px;
   }
-  .unit-cost-1 {
+  .unit-card:hover, .mini:hover {
+    border-color: black;
+  }
+
+  .name {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 32px;
+    padding-left: 8px;
+    width: 100%;
+  }
+  .cost-1 {
     background-color: #bbbbbb88;
   }
-  .selected-cost-1 {
+  .cost-1--selected {
     background-color: #a3a3a3;
   }
-  .unit-cost-2 {
+  .cost-2 {
     background-color: #14CC7388;
   }
-  .selected-cost-2 {
+  .cost-2--selected {
     background-color: #14CC73;
   }
-  .unit-cost-3 {
+  .cost-3 {
     background-color: #54C3FF88;
   }
-  .selected-cost-3 {
+  .cost-3--selected {
     background-color: #54C3FF;
   }
-  .unit-cost-4 {
+  .cost-4 {
     background-color: #DE0EBD66;
   }
-  .selected-cost-4 {
+  .cost-4--selected {
     background-color: #DE0EBDAA;
   }
-  .unit-cost-5 {
+  .cost-5 {
     background-color: #FFC43088;
   }
-  .selected-cost-5 {
+  .cost-5--selected {
     background-color: #FFC430FF;
   }
 
-  .title {
-    padding: 8px;
+  .traits {
+    display: flex;
+    flex-direction: column;
+    margin-top: 4px;
+    padding-left: 8px;
   }
 </style>

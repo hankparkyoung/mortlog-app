@@ -1,9 +1,10 @@
 <script>
+  import UnitCardContainer from '$lib/UnitCardContainer.svelte';
   import UnitCard from '$lib/UnitCard.svelte';
 
   let { data } = $props();
   let { units, breakpoints, encounters } = data;
-  console.log(breakpoints);
+  // console.log(breakpoints);
   let unitsByCost = {
     1: [],
     2: [],
@@ -71,56 +72,11 @@
 <h1>Create Game</h1>
 
 <div class="create-game">
-  <div class="unit-selection">
-    <h3 class="subtitle">Select Units</h3>
-    <div class="units-container">
-      <div class="units-by-cost">
-        {#each unitsByCost[1] as unit}
-          <UnitCard
-            unit={unit}
-            toggleUnitSelection={toggleUnitSelection}
-            selectedUnits={selectedUnits}
-          />
-        {/each}
-      </div>
-      <div class="units-by-cost">
-        {#each unitsByCost[2] as unit}
-          <UnitCard
-            unit={unit}
-            toggleUnitSelection={toggleUnitSelection}
-            selectedUnits={selectedUnits}
-          />
-        {/each}
-      </div>
-      <div class="units-by-cost">
-        {#each unitsByCost[3] as unit}
-          <UnitCard
-            unit={unit}
-            toggleUnitSelection={toggleUnitSelection}
-            selectedUnits={selectedUnits}
-          />
-        {/each}
-      </div>
-      <div class="units-by-cost">
-        {#each unitsByCost[4] as unit}
-          <UnitCard
-            unit={unit}
-            toggleUnitSelection={toggleUnitSelection}
-            selectedUnits={selectedUnits}
-          />
-        {/each}
-      </div>
-      <div class="units-by-cost">
-        {#each unitsByCost[5] as unit}
-          <UnitCard
-            unit={unit}
-            toggleUnitSelection={toggleUnitSelection}
-            selectedUnits={selectedUnits}
-          />
-        {/each}
-      </div>
-    </div>
-  </div>
+  <UnitCardContainer
+    unitsByCost={unitsByCost}
+    toggleUnitSelection={toggleUnitSelection}
+    selectedUnits={selectedUnits}
+  />
   <div class="current-game-state">
     <h3 class="subtitle">Current Units</h3>
     {#if selectedUnits.length === 0}
