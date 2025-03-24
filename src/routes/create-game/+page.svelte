@@ -2,7 +2,7 @@
   import UnitCard from '$lib/UnitCard.svelte';
 
   let { data } = $props();
-  let { units, breakpoints } = data;
+  let { units, breakpoints, encounters } = data;
   console.log(breakpoints);
   let unitsByCost = {
     1: [],
@@ -49,8 +49,10 @@
       let traitBreakpoints = breakpoints.filter(breakpoint => (
         parseInt(trait_id) === breakpoint.trait_id
       ));
+      console.log(breakpoints, traitBreakpoints);
       let activeBreakpoint;
       traitBreakpoints.forEach(breakpoint => {
+        let currentBreakpoint = parseInt(allSelectedTraits[trait_id]);
         if (allSelectedTraits[trait_id] >= breakpoint.breakpoint_value) {
           activeBreakpoint = breakpoint;
         }
@@ -137,9 +139,16 @@
       {/each}
     </div>
     <h3 class="subtitle">Active Traits</h3>
+    {#if Object.keys(activeTraits).length === 0}
+      <p class="description">Activated traits will show up here.</p>
+    {/if}
     <div class="traits">
       {#each Object.keys(activeTraits) as activeTraitId}
-      <div class="trait-tag">
+      <div
+        class="
+          trait-tag
+          {`trait-tag--${activeTraits[activeTraitId].breakpoint_tier}`}
+      ">
         <p class="trait">
           {activeTraits[activeTraitId].trait_name}
         </p>
@@ -153,7 +162,7 @@
   </div>
 </div>
 
-<style lang="scss">
+<style>
   .create-game {
     background-color: #eeeeee;
     display: flex;
@@ -190,6 +199,21 @@
     margin: 0 0 4px 4px;
     padding: 0;
     width: 140px;
+  }
+  .trait-tag--bronze {
+    background-color: #99571477
+  }
+  .trait-tag--silver {
+    background-color: #86868666;
+  }
+  .trait-tag--gold {
+    background-color: #ffae0088;
+  }
+  .trait-tag--prismatic {
+    background-color: blue;
+  }
+  .trait-tag--unique {
+    background-color: #ff494988;
   }
   .trait, .breakpoint {
     margin: 0;

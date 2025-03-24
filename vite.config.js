@@ -15,7 +15,6 @@ export default ({ mode }) => {
 					rewrite: (path) => path.replace(/^\/api/, ''),
 				},
 			},
-			// '/api': env.VITE_API_URL || 'http://localhost:4242',
 		},
 	};
 };

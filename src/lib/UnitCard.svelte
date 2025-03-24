@@ -85,16 +85,16 @@
     background-color: #54C3FF;
   }
   .unit-cost-4 {
-    background-color: #DE0EBD88;
+    background-color: #DE0EBD66;
   }
   .selected-cost-4 {
-    background-color: #ff42e0;
+    background-color: #DE0EBDAA;
   }
   .unit-cost-5 {
     background-color: #FFC43088;
   }
   .selected-cost-5 {
-    background-color: #FFC430;
+    background-color: #FFC430FF;
   }
 
   .title {
