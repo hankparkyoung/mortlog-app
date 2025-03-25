@@ -1,29 +1,22 @@
 <script>
-  import UnitCard from '$lib/UnitCard.svelte';
+  import TraitCard from '$lib/TraitCard.svelte';
 
   let {
     title,
-    isMini,
     placeholder,
-    units,
-    toggleUnitSelection,
-    selectedUnits
+    traits
   } = $props();
-
 </script>
 
-<div class="unit-card-container">
+<div class="trait-card-container">
   <h3 class="title">{title}</h3>
-  {#if units.length === 0}
+  {#if Object.keys(traits).length === 0}
     <p class="placeholder">{placeholder}</p>
   {/if}
-  <div class="units">
-    {#each units as unit (unit.unit_id)}
-      <UnitCard
-        isMini={isMini}
-        unit={unit}
-        toggleUnitSelection={toggleUnitSelection}
-        selectedUnits={selectedUnits}
+  <div class="traits">
+    {#each Object.keys(traits) as traitId (traits[traitId].breakpoint_id)}
+      <TraitCard
+        trait={traits[traitId]}
       />
     {/each}
   </div>
@@ -34,7 +27,7 @@
     all: unset;
     box-sizing: border-box;
   }
-  .unit-card-container {
+  .trait-card-container {
     display: flex;
     flex-direction: column;
     margin-bottom: 8px;
@@ -47,7 +40,7 @@
   .placeholder {
     font-style: italic;
   }
-  .units {
+  .traits {
     display: flex;
     flex-wrap: wrap;
   }
