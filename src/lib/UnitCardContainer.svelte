@@ -1,8 +1,8 @@
 <script>
-  import UnitCard from '$lib/UnitCard.svelte';
+  import { UnitCard } from '$lib';
 
   let {
-    title,
+    subtitle,
     isMini,
     placeholder,
     units,
@@ -13,7 +13,7 @@
 </script>
 
 <div class="unit-card-container">
-  <h3 class="title">{title}</h3>
+  <h3 class="subtitle">{subtitle}</h3>
   {#if units.length === 0}
     <p class="placeholder">{placeholder}</p>
   {/if}
@@ -39,13 +39,9 @@
     flex-direction: column;
     margin-bottom: 8px;
   }
-  .title {
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 32px;
-  }
   .placeholder {
     font-style: italic;
+    padding-left: 4px;
   }
   .units {
     display: flex;

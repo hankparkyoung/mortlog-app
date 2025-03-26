@@ -18,7 +18,7 @@
   );
   const styleByCost = `cost-${cost}`;
   const styleBySelected = $derived.by(() => {
-    const style = isSelected
+    const style = !isMini && isSelected
       ? `cost-${cost}--selected`
       : ''
     return style;

@@ -1,15 +1,15 @@
 <script>
-  import TraitCard from '$lib/TraitCard.svelte';
+  import { TraitCard } from '$lib';
 
   let {
-    title,
+    subtitle,
     placeholder,
     traits
   } = $props();
 </script>
 
 <div class="trait-card-container">
-  <h3 class="title">{title}</h3>
+  <h3 class="subtitle">{subtitle}</h3>
   {#if Object.keys(traits).length === 0}
     <p class="placeholder">{placeholder}</p>
   {/if}
@@ -31,11 +31,6 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 8px;
-  }
-  .title {
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 32px;
   }
   .placeholder {
     font-style: italic;

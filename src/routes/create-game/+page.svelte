@@ -1,9 +1,14 @@
 <script>
-  import UnitCardContainer from '$lib/UnitCardContainer.svelte';
-  import TraitCardContainer from '$lib/TraitCardContainer.svelte';
+  import {
+    UnitCardContainer,
+    TraitCardContainer,
+    GameNotes
+  } from '$lib';
 
   let { data } = $props();
   let { units, breakpoints, encounters } = data;
+
+  let notes = $state('');
 
   let selectedUnits = $state([]);
   const toggleUnitSelection = unit => {
@@ -63,30 +68,38 @@
 <h1 class="title">Create Game</h1>
 
 <div class="create-game">
-  <div class="column">
-    <UnitCardContainer
-      title="Select Units"
-      isMini={false}
-      placeholder={"Units failed to load."}
-      units={units}
-      toggleUnitSelection={toggleUnitSelection}
-      selectedUnits={selectedUnits}
-    />
+  <div class="row top">
+    <div class="column left">
+      <UnitCardContainer
+        subtitle="Current Units"
+        isMini={true}
+        placeholder={"Units you select will show up here."}
+        units={selectedUnits}
+        toggleUnitSelection={toggleUnitSelection}
+        selectedUnits={selectedUnits}
+      />
+    </div>
+    <div class="column right">
+      <GameNotes
+        subtitle={"Game Notes"}
+        bind:notes={notes}
+      />
+    </div>
   </div>
-  <div class="column">
-    <UnitCardContainer
-      title="Current Units"
-      isMini={true}
-      placeholder={"Units you select will show up here."}
-      units={selectedUnits}
-      toggleUnitSelection={toggleUnitSelection}
-      selectedUnits={selectedUnits}
-    />
-    <TraitCardContainer
-      title="Active Traits"
-      placeholder={"Activated traits will show up here."}
-      traits={activeTraits}
-    />
+  <div class="row bottom">
+    <div class="column left">
+      <UnitCardContainer
+        subtitle="Select Units"
+        isMini={false}
+        placeholder={"Units failed to load."}
+        units={units}
+        toggleUnitSelection={toggleUnitSelection}
+        selectedUnits={selectedUnits}
+      />
+    </div>
+    <div class="column right">
+      <p>placeholder for other game info selections</p>
+    </div>
   </div>
 </div>
 
@@ -100,6 +113,12 @@
     all: unset;
     box-sizing: border-box;
   }
+  :global(.subtitle) {
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 32px;
+    padding-left: 4px;
+  }
   .title {
     font-size: 32px;
     font-weight: bolder;
@@ -109,9 +128,20 @@
   .create-game {
     border-top: 1px solid black;
     display: flex;
+    flex-direction: column;
   }
-  .column {
+  .row {
+    display: flex;
     padding: 8px;
-    width: 50%;
+    width: 100%;
+  }
+  .top {
+    height: 180px;
+  }
+  .left {
+    width: 70%;
+  }
+  .right {
+    width: 30%;
   }
 </style>
