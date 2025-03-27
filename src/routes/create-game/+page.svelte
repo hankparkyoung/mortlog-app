@@ -12,17 +12,24 @@
 
   let selectedUnits = $state([]);
   const toggleUnitSelection = unit => {
+    const maxTeamSize = 12;
     const index = selectedUnits.findIndex(selected => (
       selected.unit_id === unit.unit_id
     ));
-    if (index === -1) {
-      selectedUnits.push(unit);
+    if (selectedUnits.length < maxTeamSize) {
+      if (index === -1) {
+        selectedUnits.push(unit);
+      } else {
+        selectedUnits = selectedUnits.toSpliced(index, 1);
+      };
+      selectedUnits.sort((a, b) => {
+        return a.unit_id - b.unit_id;
+      });
     } else {
-      selectedUnits = selectedUnits.toSpliced(index, 1);
+      if (index !== -1) {
+        selectedUnits = selectedUnits.toSpliced(index, 1);
+      }
     };
-    selectedUnits.sort((a, b) => {
-      return a.unit_id - b.unit_id;
-    })
   };
 
   // $inspect(selectedUnits);
@@ -65,9 +72,8 @@
 
 </script>
 
-<h1 class="title">Create Game</h1>
-
 <div class="create-game">
+  <h1 class="title">Create Game</h1>
   <div class="row top">
     <div class="column left">
       <UnitCardContainer
@@ -77,6 +83,11 @@
         units={selectedUnits}
         toggleUnitSelection={toggleUnitSelection}
         selectedUnits={selectedUnits}
+      />
+      <TraitCardContainer
+        subtitle="Active Traits"
+        placeholder="Activated traits will show up here."
+        traits={activeTraits}
       />
     </div>
     <div class="column right">
@@ -126,22 +137,27 @@
     padding-left: 8px;
   }
   .create-game {
+    align-items: center;
     border-top: 1px solid black;
     display: flex;
     flex-direction: column;
   }
   .row {
+    border-top: 1px solid black;
     display: flex;
     padding: 8px;
-    width: 100%;
   }
   .top {
-    height: 180px;
+    height: 260px;
+  }
+  .column {
+    display: flex;
+    flex-direction: column;
   }
   .left {
-    width: 70%;
+    width: 784px;
   }
   .right {
-    width: 30%;
+    width: 335px;
   }
 </style>

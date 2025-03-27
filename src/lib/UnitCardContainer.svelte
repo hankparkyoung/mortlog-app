@@ -14,10 +14,13 @@
 
 <div class="unit-card-container">
   <h3 class="subtitle">{subtitle}</h3>
-  {#if units.length === 0}
-    <p class="placeholder">{placeholder}</p>
-  {/if}
-  <div class="units">
+  <div
+    class="units"
+    class:current-units={isMini}
+  >
+    {#if units.length === 0}
+      <p class="placeholder">{placeholder}</p>
+    {/if}
     {#each units as unit (unit.unit_id)}
       <UnitCard
         isMini={isMini}
@@ -46,5 +49,8 @@
   .units {
     display: flex;
     flex-wrap: wrap;
+  }
+  .current-units {
+    height: 88px;
   }
 </style>

@@ -25,7 +25,7 @@
   .input {
     background-color: #e4e2e2;
     border: 2px solid grey;
-    height: 120px;
+    height: 180px;
     padding: 8px;
     text-align: top;
     width: 100%;
