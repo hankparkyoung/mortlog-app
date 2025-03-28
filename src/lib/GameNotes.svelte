@@ -1,6 +1,5 @@
 <script>
   let { subtitle, notes: value } = $props();
-  // let { notes } = $state('');
 </script>
 
 <div class="game-notes">

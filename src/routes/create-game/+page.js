@@ -7,9 +7,13 @@ export const load = async ({ fetch }) => {
 
   const encountersRes = await fetch('/api/encounters');
   const encounters = await encountersRes.json();
+
+  const hacksRes = await fetch('/api/hacks');
+  const hacks = await hacksRes.json();
   return {
     units,
     breakpoints,
-    encounters
-  }
-}
+    encounters,
+    hacks
+  };
+};

@@ -32,9 +32,6 @@
     flex-direction: column;
     margin-bottom: 8px;
   }
-  .placeholder {
-    font-style: italic;
-  }
   .traits {
     display: flex;
     flex-wrap: wrap;

@@ -2,6 +2,7 @@
 
 export { default as EncounterPicker } from './EncounterPicker.svelte';
 export { default as GameNotes } from './GameNotes.svelte';
+export { default as HackPicker } from './HackPicker.svelte';
 export { default as TraitCard } from './TraitCard.svelte';
 export { default as TraitCardContainer } from './TraitCardContainer.svelte';
 export { default as UnitCard } from './UnitCard.svelte';

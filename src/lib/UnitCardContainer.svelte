@@ -42,10 +42,6 @@
     flex-direction: column;
     margin-bottom: 8px;
   }
-  .placeholder {
-    font-style: italic;
-    padding-left: 4px;
-  }
   .units {
     display: flex;
     flex-wrap: wrap;

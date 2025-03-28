@@ -2,15 +2,19 @@
   import {
     UnitCardContainer,
     TraitCardContainer,
-    GameNotes
+    GameNotes,
+    EncounterPicker,
+    HackPicker
   } from '$lib';
 
   let { data } = $props();
-  let { units, breakpoints, encounters } = data;
+  let { units, breakpoints, encounters, hacks } = data;
 
   let notes = $state('');
-
+  let encounter = $state('');
+  let selectedHacks = $state([]);
   let selectedUnits = $state([]);
+
   const toggleUnitSelection = unit => {
     const maxTeamSize = 12;
     const index = selectedUnits.findIndex(selected => (
@@ -109,7 +113,18 @@
       />
     </div>
     <div class="column right">
-      <p>placeholder for other game info selections</p>
+      <EncounterPicker
+        subtitle="Select Encounter"
+        encounterList={encounters}
+        encounter={encounter}
+        placeholder="Pick your encounter."
+      />
+      <HackPicker
+        subtitle="Select Hacks"
+        hackList={hacks}
+        selectedHacks={selectedHacks}
+        placeholder="Pick your hacks."
+      />
     </div>
   </div>
 </div>
@@ -128,6 +143,10 @@
     font-size: 20px;
     font-weight: bold;
     line-height: 32px;
+    padding-left: 4px;
+  }
+  :global(.placeholder) {
+    font-style: italic;
     padding-left: 4px;
   }
   .title {
