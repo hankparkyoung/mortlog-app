@@ -10,10 +10,15 @@ export const load = async ({ fetch }) => {
 
   const hacksRes = await fetch('/api/hacks');
   const hacks = await hacksRes.json();
+
+  const augmentsRes = await fetch('/api/augments');
+  const augments = await augmentsRes.json();
+
   return {
     units,
     breakpoints,
     encounters,
-    hacks
+    hacks,
+    augments
   };
 };

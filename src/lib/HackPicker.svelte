@@ -10,19 +10,22 @@
 <div class="hack-picker">
   <h3 class="subtitle">{subtitle}</h3>
   <fieldset class="checkboxes">
-    {#each hackList as hack}
+    {#each hackList as {
+      hack_id: id,
+      hack_name: name
+    } (id)}
       <div class="hack">
         <input
           class="checkbox"
           type="checkbox"
-          id={hack.hack_id}
-          value={hack.hack_id}
+          id={id}
+          value={id}
           bind:group={selectedHacks}
         />
         <label
-          for={hack.hack_id}
+          for={id}
           class="label"
-        >{hack.hack_name}</label>
+        >{name}</label>
       </div>
     {/each}
   </fieldset>
@@ -40,6 +43,7 @@
   .hack-picker {
     display: flex;
     flex-direction: column;
+    margin-bottom: 8px;
   }
   .checkboxes {
     border: 2px solid grey;

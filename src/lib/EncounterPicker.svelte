@@ -12,11 +12,15 @@
   <select
     bind:value
     class="dropdown"
+    class:placeholder={value === ''}
   >
     <option value="" disabled>{placeholder}</option>
-    {#each encounterList as encounter}
-      <option value={encounter.encounter_id}>
-        {encounter.encounter_name}
+    {#each encounterList as {
+      encounter_id: id,
+      encounter_name: name
+    } (id)}
+      <option value={id}>
+        {name}
       </option>
     {/each}
   </select>
@@ -36,5 +40,8 @@
     border: 2px solid grey;
     padding: 4px;
     width: 100%;
+  }
+  .dropdown option {
+    font-style: normal;
   }
 </style>

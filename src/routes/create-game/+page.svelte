@@ -4,16 +4,34 @@
     TraitCardContainer,
     GameNotes,
     EncounterPicker,
-    HackPicker
+    HackPicker,
+    AugmentPicker
   } from '$lib';
 
   let { data } = $props();
-  let { units, breakpoints, encounters, hacks } = data;
+  let {
+    units,
+    breakpoints,
+    encounters,
+    hacks,
+    augments
+  } = data;
+  const patch = "PBE"; // change this per patch
 
   let notes = $state('');
   let encounter = $state('');
   let selectedHacks = $state([]);
   let selectedUnits = $state([]);
+  let selectedAugments = $state(
+    Array.from({ length: 5 }, () => ({ game_stage: '', augment: '' }))
+  );
+  let augmentPlaceholders = [
+    "Pick your 1st Augment.",
+    "Pick your 2nd Augment.",
+    "Pick your 3rd Augment.",
+    "Pick your 4th Augment. (optional)",
+    "Pick your 5th Augment. (optional)"
+  ];
 
   const toggleUnitSelection = unit => {
     const maxTeamSize = 12;
@@ -77,7 +95,10 @@
 </script>
 
 <div class="create-game">
-  <h1 class="title">Create Game</h1>
+  <div class="heading">
+    <p class="title">Create Game</p>
+    <p class="patch">{patch}</p>
+  </div>
   <div class="row top">
     <div class="column left">
       <UnitCardContainer
@@ -116,14 +137,20 @@
       <EncounterPicker
         subtitle="Select Encounter"
         encounterList={encounters}
-        encounter={encounter}
+        bind:encounter={encounter}
         placeholder="Pick your encounter."
       />
       <HackPicker
         subtitle="Select Hacks"
         hackList={hacks}
-        selectedHacks={selectedHacks}
+        bind:selectedHacks={selectedHacks}
         placeholder="Pick your hacks."
+      />
+      <AugmentPicker
+        subtitle="Select Augments"
+        augmentList={augments}
+        bind:selectedAugments={selectedAugments}
+        placeholders={augmentPlaceholders}
       />
     </div>
   </div>
@@ -149,11 +176,16 @@
     font-style: italic;
     padding-left: 4px;
   }
-  .title {
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    width: 1135px;
+  }
+  .title, .patch {
     font-size: 32px;
     font-weight: bolder;
     line-height: 56px;
-    padding-left: 8px;
+    padding: 8px;
   }
   .create-game {
     align-items: center;

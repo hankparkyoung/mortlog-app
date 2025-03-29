@@ -29,6 +29,9 @@
     text-align: top;
     width: 100%;
   }
+  .input::placeholder {
+    font-style: italic;
+  }
   .input:focus {
     background-color: #d3d1d1;
     border-color: black;

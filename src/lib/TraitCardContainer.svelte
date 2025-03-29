@@ -14,7 +14,9 @@
     <p class="placeholder">{placeholder}</p>
   {/if}
   <div class="traits">
-    {#each Object.keys(traits) as traitId (traits[traitId].breakpoint_id)}
+    {#each Object.keys(traits) as traitId
+      (traits[traitId].breakpoint_id)
+    }
       <TraitCard
         trait={traits[traitId]}
       />
