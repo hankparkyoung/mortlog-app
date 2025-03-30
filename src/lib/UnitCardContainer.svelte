@@ -12,7 +12,10 @@
 
 </script>
 
-<div class="unit-card-container">
+<div
+  class="unit-card-container"
+  class:current-units-container={isMini}
+>
   <h3 class="subtitle">{subtitle}</h3>
   <div
     class="units"
@@ -42,11 +45,13 @@
     flex-direction: column;
     margin-bottom: 8px;
   }
+  .current-units-container {
+    height: 132px;
+    width: 390px;
+  }
   .units {
+    align-content: flex-start;
     display: flex;
     flex-wrap: wrap;
-  }
-  .current-units {
-    height: 88px;
   }
 </style>

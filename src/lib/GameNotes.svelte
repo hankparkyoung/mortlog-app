@@ -1,5 +1,5 @@
 <script>
-  let { subtitle, notes: value } = $props();
+  let { subtitle, notes = $bindable() } = $props();
 </script>
 
 <div class="game-notes">
@@ -7,7 +7,7 @@
   <textarea
     class="input"
     placeholder="Write your notes here."
-    bind:value
+    bind:value={notes}
   ></textarea>
 </div>
 
@@ -24,9 +24,9 @@
   .input {
     background-color: #e4e2e2;
     border: 2px solid grey;
-    height: 180px;
-    padding: 8px;
-    text-align: top;
+    height: 360px;
+    margin: 4px;
+    padding: 4px;
     width: 100%;
   }
   .input::placeholder {

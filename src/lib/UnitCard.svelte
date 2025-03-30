@@ -32,6 +32,7 @@
 >
   <h3
     class={`name ${styleByCost} ${styleBySelected}`}
+    class:name-mini={isMini}
   >{name}</h3>
   {#if !isMini}
     <ul class="traits">
@@ -56,23 +57,27 @@
     border: 2px solid grey;
     display: flex;
     flex-direction: column;
-    height: 98px;
+    height: 72px;
     margin: 4px;
-    width: 120px;
+    width: 88px;
   }
   .mini {
-    height: 36px;
+    height: 26px;
   }
   .unit-card:hover, .mini:hover {
     border-color: black;
   }
 
   .name {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
-    line-height: 32px;
-    padding-left: 8px;
+    line-height: 22px;
+    padding-left: 4px;
     width: 100%;
+  }
+  .name-mini {
+    font-weight: normal;
+    padding-top: 1px;
   }
   .cost-1 {
     background-color: #bbbbbb88;
@@ -108,7 +113,8 @@
   .traits {
     display: flex;
     flex-direction: column;
+    font-size: 11px;
     margin-top: 4px;
-    padding-left: 8px;
+    padding-left: 4px;
   }
 </style>

@@ -1,13 +1,14 @@
 <script>
+  // --- IMPORTS and DATA --- //
   import {
-    UnitCardContainer,
-    TraitCardContainer,
-    GameNotes,
+    AugmentPicker,
     EncounterPicker,
+    GameNotes,
+    GameSubmit,
     HackPicker,
-    AugmentPicker
+    TraitCardContainer,
+    UnitCardContainer
   } from '$lib';
-
   let { data } = $props();
   let {
     units,
@@ -16,23 +17,21 @@
     hacks,
     augments
   } = data;
-  const patch = "PBE"; // change this per patch
 
-  let notes = $state('');
-  let encounter = $state('');
-  let selectedHacks = $state([]);
+  // --- STATE (to be submitted) --- //
+  const patch = "TEST"; // change this per patch
   let selectedUnits = $state([]);
+  let encounter = $state('');
   let selectedAugments = $state(
     Array.from({ length: 5 }, () => ({ game_stage: '', augment: '' }))
   );
-  let augmentPlaceholders = [
-    "Pick your 1st Augment.",
-    "Pick your 2nd Augment.",
-    "Pick your 3rd Augment.",
-    "Pick your 4th Augment. (optional)",
-    "Pick your 5th Augment. (optional)"
-  ];
+  let selectedHacks = $state([]);
+  let notes = $state('');
 
+  // --- DEBUGGING --- //
+  let gamePayloadLog = $state('');
+
+  // --- DERIVING STATE and others --- //
   const toggleUnitSelection = unit => {
     const maxTeamSize = 12;
     const index = selectedUnits.findIndex(selected => (
@@ -53,9 +52,6 @@
       }
     };
   };
-
-  // $inspect(selectedUnits);
-
   let allSelectedTraits = $derived.by(() => {
     let result = {};
     selectedUnits.forEach(unit => {
@@ -67,9 +63,6 @@
     });
     return result;
   });
-
-  // $inspect(allSelectedTraits);
-
   let activeTraits = $derived.by(() => {
     let result = {};
     Object.keys(allSelectedTraits).forEach(trait_id => {
@@ -88,9 +81,80 @@
       }
     });
     return result;
-  })
+  });
 
-  // $inspect(activeTraits);
+  // --- SUBMITTING --- //
+  let isSubmitting = $state(false);
+  let errorMessage = $state('');
+
+  const submitGame = async () => {
+    if (isSubmitting) return; // prevents double clicks
+
+    gamePayloadLog = '';
+    isSubmitting = true;
+    errorMessage = '';
+    console.log('Attempting to submit game...');
+
+    const gamePayload = {
+      patch: patch,
+      notes: notes,
+      encounter_id: encounter,
+      unit_ids: selectedUnits.map(unit => unit.unit_id),
+      hack_ids: selectedHacks,
+      augments: selectedAugments
+        .filter(augment => augment.augment)
+        .map(augment => ({
+          game_stage: augment.game_stage,
+          augment_id: augment.augment
+        })),
+    };
+    console.log('Submitting Payload:', JSON.stringify(gamePayload, null, 2));
+
+    try {
+      const response = await fetch('api/games', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(gamePayload)
+      });
+      console.log('Received Response Status:', response.status);
+
+      if (!response.ok) {
+        let errorData = { message: `HTTP error! Status: ${response.status}` };
+        try {
+          errorData = await response.json();
+          console.error('Backend Error Response:', errorData);
+        } catch (jsonError) {
+          console.error('Non-JSON Backend Error Response. Status:', response.status);
+        };
+        throw new Error(errorData.error || errorData.message);
+      };
+
+      const result = await response.json();
+      console.log('Game submitted successfully:', result);
+      gamePayloadLog = JSON.stringify(gamePayloadLog, null, 2);
+
+      notes = '';
+      encounter = '';
+      selectedHacks = [];
+      selectedUnits = [];
+      selectedAugments = Array.from({ length: 5 }, () => ({ game_stage: '', augment: '' }));
+    } catch (error) {
+      console.error('Failed to submit game:', error);
+    } finally {
+      isSubmitting = false;
+    }
+  };
+
+  // --- CONTENT (ie placeholders) --- //
+  const augmentPlaceholders = [
+    "Pick your 1st Augment.",
+    "Pick your 2nd Augment.",
+    "Pick your 3rd Augment.",
+    "Pick your 4th Augment. (optional)",
+    "Pick your 5th Augment. (optional)"
+  ];
 
 </script>
 
@@ -100,11 +164,11 @@
     <p class="patch">{patch}</p>
   </div>
   <div class="row top">
-    <div class="column left">
+    <div class="column third">
       <UnitCardContainer
         subtitle="Current Units"
         isMini={true}
-        placeholder={"Units you select will show up here."}
+        placeholder="Units you select will show up here."
         units={selectedUnits}
         toggleUnitSelection={toggleUnitSelection}
         selectedUnits={selectedUnits}
@@ -115,10 +179,26 @@
         traits={activeTraits}
       />
     </div>
-    <div class="column right">
-      <GameNotes
-        subtitle={"Game Notes"}
-        bind:notes={notes}
+    <div class="column third">
+      <EncounterPicker
+        subtitle="Select Encounter"
+        encounterList={encounters}
+        bind:encounter={encounter}
+        placeholder="Pick your encounter."
+      />
+      <AugmentPicker
+        subtitle="Select Augments"
+        augmentList={augments}
+        bind:selectedAugments={selectedAugments}
+        placeholders={augmentPlaceholders}
+      />
+    </div>
+    <div class="column third">
+      <HackPicker
+        subtitle="Select Hacks"
+        hackList={hacks}
+        bind:selectedHacks={selectedHacks}
+        placeholder="Pick your hacks."
       />
     </div>
   </div>
@@ -127,30 +207,26 @@
       <UnitCardContainer
         subtitle="Select Units"
         isMini={false}
-        placeholder={"Units failed to load."}
+        placeholder="Units failed to load."
         units={units}
         toggleUnitSelection={toggleUnitSelection}
         selectedUnits={selectedUnits}
       />
     </div>
     <div class="column right">
-      <EncounterPicker
-        subtitle="Select Encounter"
-        encounterList={encounters}
-        bind:encounter={encounter}
-        placeholder="Pick your encounter."
+      <GameNotes
+        subtitle="Game Notes"
+        bind:notes={notes}
       />
-      <HackPicker
-        subtitle="Select Hacks"
-        hackList={hacks}
-        bind:selectedHacks={selectedHacks}
-        placeholder="Pick your hacks."
-      />
-      <AugmentPicker
-        subtitle="Select Augments"
-        augmentList={augments}
-        bind:selectedAugments={selectedAugments}
-        placeholders={augmentPlaceholders}
+      <!-- <button
+        onclick={submitGame}
+      >Test Submit</button> -->
+      <GameSubmit
+        subtitle="Submit Game"
+        gamePayload={gamePayloadLog}
+        onSubmit={submitGame}
+        isSubmitting={isSubmitting}
+        errorMessage={errorMessage}
       />
     </div>
   </div>
@@ -197,9 +273,11 @@
     border-top: 1px solid black;
     display: flex;
     padding: 8px;
+    width: 1135px;
   }
   .top {
-    height: 260px;
+    display: flex;
+    justify-content: space-between;
   }
   .column {
     display: flex;
@@ -207,6 +285,9 @@
   }
   .left {
     width: 784px;
+  }
+  .third {
+    width: 335px;
   }
   .right {
     width: 335px;

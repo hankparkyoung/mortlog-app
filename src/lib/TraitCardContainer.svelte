@@ -32,9 +32,12 @@
   .trait-card-container {
     display: flex;
     flex-direction: column;
+    height: 128px;
     margin-bottom: 8px;
+    width: 390px;
   }
   .traits {
+    align-content: flex-start;
     display: flex;
     flex-wrap: wrap;
   }

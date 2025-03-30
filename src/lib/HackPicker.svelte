@@ -2,9 +2,11 @@
   let {
     subtitle,
     hackList,
-    selectedHacks,
+    selectedHacks = $bindable(),
     placeholder
   } = $props();
+
+  // $inspect(selectedHacks);
 </script>
 
 <div class="hack-picker">
@@ -46,6 +48,7 @@
     margin-bottom: 8px;
   }
   .checkboxes {
+    background-color: #e4e2e2;
     border: 2px solid grey;
     column-count: 2;
     padding: 2px;
@@ -55,6 +58,7 @@
     align-items: center;
     display: flex;
     height: 24px;
+    margin-bottom: 4px;
   }
   .label {
     padding-left: 4px;

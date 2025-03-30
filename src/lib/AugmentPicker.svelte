@@ -51,6 +51,7 @@
     display: flex;
     height: 29px;
     margin-bottom: 4px;
+    margin-left: 4px;
     width: 100%;
   }
   .input {
@@ -69,6 +70,7 @@
     outline: none;
   }
   .dropdown {
+    background-color: #e4e2e2;
     border: 2px solid grey;
     padding: 4px;
     width: 100%;

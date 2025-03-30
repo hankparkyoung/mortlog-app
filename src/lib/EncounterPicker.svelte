@@ -2,7 +2,7 @@
   let {
     subtitle,
     encounterList,
-    encounter: value,
+    encounter = $bindable(),
     placeholder
     } = $props();
 </script>
@@ -10,9 +10,9 @@
 <div class="encounter-picker">
   <h3 class="subtitle">{subtitle}</h3>
   <select
-    bind:value
+    bind:value={encounter}
     class="dropdown"
-    class:placeholder={value === ''}
+    class:placeholder={encounter === ''}
   >
     <option value="" disabled>{placeholder}</option>
     {#each encounterList as {
@@ -37,7 +37,9 @@
     margin-bottom: 8px;
   }
   .dropdown {
+    background-color: #e4e2e2;
     border: 2px solid grey;
+    margin-left: 4px;
     padding: 4px;
     width: 100%;
   }

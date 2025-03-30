@@ -25,12 +25,13 @@
   }
   .trait-card {
     align-items: center;
-    border-radius: 8px;
+    border-radius: 4px;
     display: flex;
-    height: 32px;
+    font-size: 12px;
+    height: 22px;
     justify-content: space-between;
     margin: 4px;
-    width: 120px;
+    width: 88px;
   }
   .breakpoint--bronze {
     background-color: #99571477
@@ -47,10 +48,10 @@
   .breakpoint--unique {
     background-color: #ff494988;
   }
-  .trait, .breakpoint {
-    padding: 0 8px;
-  }
-  .trait {
-    font-size: 14px;
-  }
+   .trait {
+    padding-left: 4px;
+   }
+   .breakpoint {
+    padding-right: 3px;
+   }
 </style>
