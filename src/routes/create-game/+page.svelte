@@ -1,4 +1,5 @@
 <script>
+
   // --- IMPORTS and DATA --- //
   import {
     AugmentPicker,
@@ -27,9 +28,6 @@
   );
   let selectedHacks = $state([]);
   let notes = $state('');
-
-  // --- DEBUGGING --- //
-  let gamePayloadLog = $state('');
 
   // --- DERIVING STATE and others --- //
   const toggleUnitSelection = unit => {
@@ -82,6 +80,21 @@
     });
     return result;
   });
+  let isReadyToSubmit = $derived.by(() => {
+    const hasUnits = selectedUnits.length > 0;
+    const hasTraits = Object.keys(activeTraits).length > 0;
+    const hasEncounter = !!encounter;
+    const hasAugments = selectedAugments
+      .slice(0, 3).every(aug => aug.augment && aug.game_stage);
+    const hasHacks = selectedHacks.length > 0;
+    const hasNotes = notes !== '';
+    return hasUnits
+      && hasTraits
+      && hasEncounter
+      && hasAugments
+      && hasHacks
+      && hasNotes;
+  });
 
   // --- SUBMITTING --- //
   let isSubmitting = $state(false);
@@ -90,7 +103,6 @@
   const submitGame = async () => {
     if (isSubmitting) return; // prevents double clicks
 
-    gamePayloadLog = '';
     isSubmitting = true;
     errorMessage = '';
     console.log('Attempting to submit game...');
@@ -133,7 +145,6 @@
 
       const result = await response.json();
       console.log('Game submitted successfully:', result);
-      gamePayloadLog = JSON.stringify(gamePayloadLog, null, 2);
 
       notes = '';
       encounter = '';
@@ -218,12 +229,9 @@
         subtitle="Game Notes"
         bind:notes={notes}
       />
-      <!-- <button
-        onclick={submitGame}
-      >Test Submit</button> -->
       <GameSubmit
         subtitle="Submit Game"
-        gamePayload={gamePayloadLog}
+        isReady={isReadyToSubmit}
         onSubmit={submitGame}
         isSubmitting={isSubmitting}
         errorMessage={errorMessage}
